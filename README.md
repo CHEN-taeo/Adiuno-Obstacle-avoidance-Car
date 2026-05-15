@@ -1,4 +1,3 @@
-# Adiuno_Obstacle_avoidance_Car
 # Arduino Obstacle Avoidance Car
 A simple 4WD obstacle avoidance car built from scratch as part of my robotics foundation learning.
 
