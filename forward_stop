@@ -1,0 +1,82 @@
+# define IN1 2
+
+# define IN2 3
+
+# define ENA 5
+
+# define IN3 4
+
+# define IN4 6
+
+# define ENB 9
+
+// We are giving names to the digital pins on ardiuno
+
+// IN1 and IN2 control the diraction of the left two motors(IN3 and IN4 —— right)
+
+// ENA controls the speed of the left two motors(ENB —— right)
+
+  
+
+void setup(){
+
+  // set all motor pins as OUTPUT
+
+  pinMode(IN1,OUTPUT);
+
+  pinMode(IN2,OUTPUT);
+
+  pinMode(ENA,OUTPUT);
+
+  pinMode(IN3,OUTPUT);
+
+  pinMode(IN4,OUTPUT);
+
+  pinMode(ENB,OUTPUT);
+
+  // Set motor speed to 150(0=stop,255=full speed)
+
+  analogWrite(ENA,150);
+
+  analogWrite(ENB,150);
+
+  // 150 is a safe starting speed.it fast enough to move,but slow enough to catch if something goes wrong
+
+  
+
+}
+
+  
+
+void loop(){
+
+  // Move FORWARD for 2 seconds
+
+  digitalWrite(IN1,HIGH); // Turn on power,Swap HIGH and LOW for left motor
+
+  digitalWrite(IN2,LOW);  // TUrn on ground
+
+  digitalWrite(IN3,HIGH); // Swap HIGH and LOW FOR right motor
+
+  digitalWrite(IN4,LOW);
+
+  delay(2000);
+
+  
+
+  // STOP for 1 second
+
+  digitalWrite(IN1,LOW);
+
+  digitalWrite(IN2,LOW);
+
+  digitalWrite(IN3,LOW);
+
+  digitalWrite(IN4,LOW);
+
+  delay(1000);
+
+  
+  
+
+}
