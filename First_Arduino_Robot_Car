@@ -1,0 +1,42 @@
+// FINAL WORKING CODE - NO SPEED PINS NEEDED
+# define LEFT_FORWARD 4
+# define LEFT_BACKWARD 2
+# define RIGHT_FORWARD 8
+# define RIGHT_BACKWARD 7
+// the pins are texted by me one by one
+void setup(){
+  // turn on motors
+  pinMode(LEFT_FORWARD,OUTPUT);
+  pinMode(LEFT_BACKWARD,OUTPUT);
+  pinMode(RIGHT_FORWARD,OUTPUT);
+  pinMode(RIGHT_BACKWARD,OUTPUT);
+
+}
+void loop(){
+  //start to move
+
+  // run forward for 2 second
+  digitalWrite(LEFT_FORWARD,HIGH);
+  digitalWrite(RIGHT_FORWARD,HIGH);
+  digitalWrite(LEFT_BACKWARD,LOW);
+  digitalWrite(RIGHT_BACKWARD,LOW);
+  delay(2000);
+  //run backward for 2 second
+  digitalWrite(LEFT_FORWARD,LOW);
+  digitalWrite(RIGHT_FORWARD,LOW);
+  digitalWrite(LEFT_BACKWARD,HIGH);
+  digitalWrite(RIGHT_BACKWARD,HIGH);
+  delay(2000);
+  // spin for left 
+  digitalWrite(LEFT_FORWARD,HIGH);
+  digitalWrite(RIGHT_FORWARD,LOW);
+  digitalWrite(LEFT_BACKWARD,LOW);
+  digitalWrite(RIGHT_BACKWARD,HIGH);
+  delay(1000);
+  // spin for right
+  digitalWrite(LEFT_FORWARD,LOW);
+  digitalWrite(LEFT_BACKWARD,HIGH);
+  digitalWrite(RIGHT_FORWARD,HIGH);
+  digitalWrite(RIGHT_BACKWARD,LOW);
+  delay(1000);
+}
