@@ -1,0 +1,132 @@
+// FINAL WORKING CODE - NO SPEED PINS NEEDED
+# define LEFT_FORWARD 2
+# define LEFT_BACKWARD 4
+# define RIGHT_FORWARD 7
+# define RIGHT_BACKWARD 8
+// the pins are texted by me one by one
+
+// HC-SR04 Ultrasonic Sensor Pins(from technical specification)
+# define TRIG_PIN 9
+# define ECHO_PIN 10
+
+//Obstacle detection threshold (20cm as specified)
+# define OBSTACLE_THRESHOLD 20
+
+void setup(){
+
+  // ADD THIS LINE AT THE VERY TOP OF setup()
+  Serial.begin(9600);
+
+  // Initialize motor control pins
+  pinMode(LEFT_FORWARD,OUTPUT);
+  pinMode(LEFT_BACKWARD,OUTPUT);
+  pinMode(RIGHT_FORWARD,OUTPUT);
+  pinMode(RIGHT_BACKWARD,OUTPUT);
+
+  //Initialize ultrasonic sensor pins
+  pinMode(TRIG_PIN,OUTPUT);
+  pinMode(ECHO_PIN,INPUT);
+
+  //TRIG_PIN is set to OUTPUT because we send signals to it
+  //ECHO_PIN is set to INPUT because we read signals from it
+
+  //wait for sensor to stabilize
+  delay(2000);
+
+}
+
+//Helper function:Measure distance in centimeters using HC-SR04
+float getDistance(){
+  //Send 10 microsecond pulse to Trig pin
+  digitalWrite(TRIG_PIN,LOW);
+  delayMicroseconds(2); 
+  //Start by turning the Trig pin OFF(0 volts)for 2 microseconds,this is like cleaning your thoat before you yell
+  // It makes sure the sensor is completely quiet and ready to send a clean,sharp signal
+  digitalWrite(TRIG_PIN,HIGH);
+  delayMicroseconds(10);  // This is the whistle blow
+  digitalWrite(TRIG_PIN,LOW);
+  //Why exactly 10us? This is what the HC-SR04 datasheet requires. Any shorter and the sensor won't trigger. Any longer and you will get inaccurate readings.
+
+
+
+  //Measure time Echo pin stays HIGH
+  // ✅ FIX 1: Add 30ms timeout (max ~5m, more than enough for HC-SR04)
+  // Default 1s timeout is way too slow and causes the 0 bug
+  long duration = pulseIn(ECHO_PIN,HIGH,30000);
+
+  // ✅ FIX 2: If no echo received (timeout), return 999cm (no obstacle)
+  if (duration == 0) {
+    return 999;
+  }
+
+
+  // Calculate distance:speed of sound = 0.0343 cm/us
+  // Divide by 2 because sound travels to the object and back
+  float distance = (duration*0.0343)/2;
+
+   // ✅ FIX 3: Ignore readings less than 2cm (sensor minimum range)
+  // HC-SR04 cannot measure distances closer than 2cm accurately
+  if (distance < 2) {
+    return 999;
+  }
+
+  return distance;
+}
+
+// Movement helper functions(reuse your verified logic)
+
+  void moveForward(){
+  digitalWrite(LEFT_FORWARD,HIGH);
+  digitalWrite(RIGHT_FORWARD,HIGH);
+  digitalWrite(LEFT_BACKWARD,LOW);
+  digitalWrite(RIGHT_BACKWARD,LOW);
+  }
+  
+
+void moveBackward(){
+  digitalWrite(LEFT_FORWARD,LOW);
+  digitalWrite(RIGHT_FORWARD,LOW);
+  digitalWrite(LEFT_BACKWARD,HIGH);
+  digitalWrite(RIGHT_BACKWARD,HIGH);
+}
+
+void stopMotors(){
+  digitalWrite(LEFT_FORWARD,LOW);
+  digitalWrite(RIGHT_FORWARD,LOW);
+  digitalWrite(LEFT_BACKWARD,LOW);
+  digitalWrite(RIGHT_BACKWARD,LOW);
+}
+  
+ void turnRight90Degrees(){
+  // 500ms = approximately 90 degrees(adjust this value for your robot)
+  digitalWrite(LEFT_FORWARD,LOW);
+  digitalWrite(RIGHT_FORWARD,HIGH);
+  digitalWrite(LEFT_BACKWARD,HIGH);
+  digitalWrite(RIGHT_BACKWARD,LOW);
+  delay(500);
+  stopMotors();
+ }
+
+ void loop(){
+  // Step 1: Measure distance to nearest obstacle (declare ONCE only)
+  float distance = getDistance();
+
+  // Add serial output to see what the sensor is measuring
+  Serial.print("Distance: ");
+  Serial.println(distance);
+
+  // Step 2: Obstacle avoidance logic (from your pseudocode)
+  if (distance < OBSTACLE_THRESHOLD){
+    // Obstacle detected - stop and turn right
+    stopMotors();
+    delay(100); // Short delay to stabilize
+    turnRight90Degrees();
+  }
+  else{
+    // No obstacle - move forward continuously
+    moveForward();
+  }
+
+  // Small delay to prevent sensor overload
+  delay(50);
+}
