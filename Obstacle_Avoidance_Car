@@ -1,0 +1,157 @@
+// -----------------------------------
+//1.CONFIGURATION LAYER
+// -----------------------------------
+// Motor pins (VERIFIED May 16,2026)
+
+#define LEFT_FORWARD  2
+#define LEFT_BACKWARD 4
+#define RIGHT_FORWARD 7
+#define RIGHT_BACKWARD 8
+
+// Ultrasonic sensor pins (VERIFIED BY YOU)
+#define TRIG_PIN 9
+#define ECHO_PIN 10
+
+// Servo pin (VERIFIED BY YOU: D3)
+#define SERVO_PIN 3
+
+// System constants
+#define OBSTACLE_THRESHOLD 20  // Stop if anything is closer than 20cm
+#define SERVO_CENTER 90        // Servo faces straight ahead
+#define SCAN_ANGLE 45          // How far left/right to scan
+
+// Include required libraries
+#include <Servo.h>
+
+// Create global objects (only create these once)
+Servo sensorServo;
+
+// -------------------------------
+//2.INITIALIZATION LAYER
+// -------------------------------
+void setup() {
+  // Start serial monitor for debugging(ALWAYS DO THIS FIRST)
+  Serial.begin(9600);
+  // The baud rate(the speed of communication between your Ardiuno and your computer,measured in bits per second(bps))
+  // Both devices must use the same baud rate
+
+   // Set all motor pins as outputs
+  pinMode(LEFT_FORWARD, OUTPUT);
+  pinMode(LEFT_BACKWARD, OUTPUT);
+  pinMode(RIGHT_FORWARD, OUTPUT);
+  pinMode(RIGHT_BACKWARD, OUTPUT);
+
+  // Set ultrasonic sensor pins
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+
+  // Initialize servo and point it straight forward
+  sensorServo.attach(SERVO_PIN);
+  sensorServo.write(SERVO_CENTER);
+
+  // Wait 2 seconds for all hardware to stabilize
+  delay(2000);
+
+  Serial.println("Robot Initialized Successfully");
+}
+
+// -------------------------------
+// Helper Functions Layer
+//---------------------------------
+
+//Tool 1:Measure distance in centimiters using HC-SR04
+float getDistance(){
+  // Step 1:Send clean 10us trigger pulse
+  digitalWrite(TRIG_PIN,LOW); // NOTICE
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN,HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN,LOW);
+
+  // Step 2:Wait for echo (timeout after 30ms = 5m max)
+  long duration = pulseIn(ECHO_PIN,HIGH,30000);
+
+  //Step 3:Handle no echo case
+  if (duration == 0){
+    return 999;
+  }
+
+  // Step 4:Calculate distance (speed of sound = 0.03443 cm/us)
+  float distance = (duration * 0.0343)/2;
+
+  // Step 5:Ignore invalid readings (sensor min range = 2cm)
+  if (distance < 2||distance > 400){
+    return 999;
+  }
+}
+float scanDiraction(int angle){
+  // Move servo to the requested angle
+  sensorServo.write(angle);
+
+  //NON-NEGOTIABLE DELAY:Servos take time to move
+  //If you remove this,you will measure while the servo moving
+  delay(500);
+
+  //Return the distance at this angle
+  return getDistance();
+
+}
+
+// Tool 3: Basic movement functions
+void moveForward() {
+  digitalWrite(LEFT_FORWARD, HIGH);
+  digitalWrite(RIGHT_FORWARD, HIGH);
+  digitalWrite(LEFT_BACKWARD, LOW);
+  digitalWrite(RIGHT_BACKWARD, LOW);
+}
+
+void stopMotors() {
+  digitalWrite(LEFT_FORWARD, LOW);
+  digitalWrite(RIGHT_FORWARD, LOW);
+  digitalWrite(LEFT_BACKWARD, LOW);
+  digitalWrite(RIGHT_BACKWARD, LOW);
+}
+
+void turnRight90Degrees() {
+  // Left forward + Right backward = turn right (physics never changes)
+  digitalWrite(LEFT_FORWARD, HIGH);
+  digitalWrite(RIGHT_BACKWARD, HIGH);
+  digitalWrite(LEFT_BACKWARD, LOW);
+  digitalWrite(RIGHT_FORWARD, LOW);
+  delay(500);  // Adjust this for perfect 90 degrees
+  stopMotors();
+}
+
+void turnLeft90Degrees() {
+  // Left backward + Right forward = turn left
+  digitalWrite(LEFT_BACKWARD, HIGH);
+  digitalWrite(RIGHT_FORWARD, HIGH);
+  digitalWrite(LEFT_FORWARD, LOW);
+  digitalWrite(RIGHT_BACKWARD, LOW);
+  delay(500);
+  stopMotors();
+}
+
+// -----------------------------------------
+// 4.MAIN DECISION LOOP
+// -----------------------------------------
+
+void loop() {
+  //Always keep sensor facing forward when driving
+  sensorServo.Write(SERVO_CENTER);
+
+  // Step 1:See what is in front of me
+  float.frontDistance = getDistance();
+  Serial.print("front:");
+  Serial.println(frontDistance);
+
+  // Step 2:Make a dicision
+  if(frontDistance<OBSTACLE_THRESHOLD){
+    stopMotors();
+    delay(100);
+    Serial.println("OBSTACLE AHERD! SCAN.......");
+
+  //Step 3:Scan left and right to find the best path
+  float leftDistance = scanDiraction(SERVO_CENTER-SCAN_ANGLE)
+  }
+}
