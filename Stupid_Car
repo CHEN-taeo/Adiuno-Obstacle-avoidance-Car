@@ -1,0 +1,51 @@
+#define LEFT_FORWARD  2
+#define LEFT_BACKWARD 4
+#define RIGHT_FORWARD 7
+#define RIGHT_BACKWARD 8
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(LEFT_FORWARD, OUTPUT);
+  pinMode(LEFT_BACKWARD, OUTPUT);
+  pinMode(RIGHT_FORWARD, OUTPUT);
+  pinMode(RIGHT_BACKWARD, OUTPUT);
+  stopAllMotors();
+  Serial.println("=== INDIVIDUAL WHEEL TEST START ===");
+}
+
+void loop() {
+  // Test 1: Left Front Wheel (should spin FORWARD)
+  Serial.println("\nTEST 1: LEFT FRONT WHEEL FORWARD");
+  digitalWrite(LEFT_FORWARD, HIGH);
+  delay(2000);
+  stopAllMotors();
+  delay(1000);
+
+  // Test 2: Left Back Wheel (should spin BACKWARD)
+  Serial.println("TEST 2: LEFT BACK WHEEL BACKWARD");
+  digitalWrite(LEFT_BACKWARD, HIGH);
+  delay(2000);
+  stopAllMotors();
+  delay(1000);
+
+  // Test 3: Right Front Wheel (should spin FORWARD)
+  Serial.println("TEST 3: RIGHT FRONT WHEEL FORWARD");
+  digitalWrite(RIGHT_FORWARD, HIGH);
+  delay(2000);
+  stopAllMotors();
+  delay(1000);
+
+  // Test 4: Right Back Wheel (should spin BACKWARD)
+  Serial.println("TEST 4: RIGHT BACK WHEEL BACKWARD");
+  digitalWrite(RIGHT_BACKWARD, HIGH);
+  delay(2000);
+  stopAllMotors();
+  delay(1000);
+}
+
+void stopAllMotors() {
+  digitalWrite(LEFT_FORWARD, LOW);
+  digitalWrite(LEFT_BACKWARD, LOW);
+  digitalWrite(RIGHT_FORWARD, LOW);
+  digitalWrite(RIGHT_BACKWARD, LOW);
+}
