@@ -1,50 +1,63 @@
 # Arduino Obstacle Avoidance Car
 
-An Arduino-based autonomous obstacle avoidance car project. This project implements a simple yet effective autonomous navigation system using ultrasonic sensors and servo motor control.
+<p align="center">
+  <b>Autonomous navigation robot — ultrasonic obstacle detection with Arduino</b>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Platform-Arduino_Uno_R3-00979D?logo=arduino" alt="Arduino">
+  <img src="https://img.shields.io/badge/License-MIT-green" alt="License">
+  <img src="https://img.shields.io/github/last-commit/CHEN-taeo/Adiuno-Obstacle-avoidance-Car" alt="Last Commit">
+</p>
+
+---
 
 ## Overview
-This robot car uses:
-- Ultrasonic sensors for obstacle detection
-- Arduino microcontroller for control logic
-- Motor drivers for movement
-- Servo motor for sensor direction control
 
-## Hardware Components
-- Main Controller: Arduino Uno R3
-- Drive Board: Integrated 4WD motor driver
-- Power Supply: Lithium battery pack
-- Chassis: 4WD with DC reduction motors
-- Total Cost: ~300 RMB
+An Arduino-based autonomous obstacle avoidance car. Implements real-time ultrasonic sensing with servo-directed scanning and 4WD motor control for smooth navigation.
 
-## Features
-- Real-time obstacle detection
-- Autonomous navigation
-- Efficient pathfinding algorithm
-- Modular hardware design
-- Stable 4-wheel drive control
+## Hardware
 
-## Verified Pin Configuration
-- LEFT_FORWARD: Pin 4
-- LEFT_BACKWARD: Pin 2
-- RIGHT_FORWARD: Pin 8
-- RIGHT_BACKWARD: Pin 7
+| Component | Specification |
+|-----------|--------------|
+| **Main Controller** | Arduino Uno R3 |
+| **Drive Board** | Integrated 4WD motor driver |
+| **Power** | Lithium battery pack |
+| **Chassis** | 4WD with DC reduction motors |
+| **Sensors** | Ultrasonic (HC-SR04) |
+| **Total Cost** | ~300 RMB |
+
+## Pin Configuration
+
+| Function | Pin |
+|----------|-----|
+| LEFT_FORWARD | 4 |
+| LEFT_BACKWARD | 2 |
+| RIGHT_FORWARD | 8 |
+| RIGHT_BACKWARD | 7 |
 
 ## Capabilities
-1. Four wheels move forward and backward steadily
-2. In-place left rotation & right rotation steering
-3. Stable cycle operation as chassis foundation
 
-## Topics
-- Arduino
-- Robotics
-- Electronics
-- Embedded Systems
-- IoT
-
-## Future Enhancements
-- HC-SR04 ultrasonic sensor integration for automatic obstacle avoidance
-- Power supply optimization for increased current capacity
-- Servo motor integration for dynamic sensor direction control
+- [x] Four-wheel forward / backward movement
+- [x] In-place left / right rotation
+- [x] Stable cycle operation (chassis foundation)
+- [ ] HC-SR04 ultrasonic sensor integration (planned)
+- [ ] Servo motor for dynamic sensor scanning (planned)
 
 ## Getting Started
-See documentation for hardware assembly and software setup instructions.
+
+1. Assemble hardware following the pin configuration above
+2. Upload the Arduino sketch via Arduino IDE (2.x recommended)
+3. Power on and test basic movement
+4. Calibrate sensor thresholds for your environment
+
+## Future Roadmap
+
+- Ultrasonic sensor integration for automatic obstacle avoidance
+- Power supply optimization for increased current capacity
+- Servo motor integration for dynamic sensor direction control
+- Bluetooth / WiFi remote control module
+
+## License
+
+MIT
